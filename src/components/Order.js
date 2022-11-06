@@ -17,6 +17,9 @@ const containerVariants = {
       staggerChildren: 1,
     },
   },
+  exit: {
+    ease: 'easeInOut',
+  },
 };
 
 const childVariants = {
@@ -28,20 +31,17 @@ const childVariants = {
   },
 };
 
-const Order = ({ pizza }) => {
-  const [showTitle, setShowTitle] = useState(true);
-  const timer = setTimeout(() => {
-    setShowTitle(false);
-  }, 4000);
-
+const Order = ({ pizza, setShowModal }) => {
   useEffect(() => {
-    if (timer) {
-      return () => {
-        console.log('clearTimeout');
-        clearTimeout(timer);
-      };
-    }
-  }, [timer]);
+    const timer = setTimeout(() => {
+      setShowModal(true);
+    }, 4000);
+
+    return () => {
+      console.log('clearTimeout');
+      clearTimeout(timer);
+    };
+  }, [setShowModal]);
 
   return (
     <motion.div
@@ -49,17 +49,9 @@ const Order = ({ pizza }) => {
       variants={containerVariants}
       initial='hidden'
       animate='visible'
+      exit='exit'
     >
-      <AnimatePresence>
-        {showTitle && (
-          <motion.h2
-            exit={{ y: -1000 }}
-            transition={{ type: 'spring', stiffness: 30 }}
-          >
-            Thank you for your order :)
-          </motion.h2>
-        )}
-      </AnimatePresence>
+      <h2>Thank you for your order :)</h2>
 
       <motion.p variants={childVariants}>
         You ordered a {pizza.base} pizza with:
